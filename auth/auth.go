@@ -3,73 +3,46 @@ package main
 import (
 	"crypto/sha256"
 	"fmt"
+	"log"
 	"net/http"
+
+	"auth/db"
+	"auth/pkg"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 )
 
 const (
 	salt = "x1n98r98y1xr2n8y"
 )
 
-var users = map[string]*User{}
-
-type User struct {
-	Id       string `json:"-" db:"id"`
-	Login    string `json:"login" db:"login" binding:"required"`
-	Password string `json:"password" db:"password_hash" binding:"required"`
-	Name     string `json:"name" db:"name" binding:"required"`
-	Role     string `json:"role" db:"role" binding:"required"`
-}
-
-type UserResponse struct {
-	Name  string `json:"name"`
-	Role  string `json:"role"`
+type Auth struct {
+	db *sqlx.DB
 }
 
 func main() {
+	db, err := db.NewPostgresDB(db.Config{Host: "localhost", Port: "5432", Username: "postgres", Password: "postgres", DBName: "postgres", SSLMode: "disable"})
+	if err != nil {
+		log.Fatalf("Failed to connect to db: %s\n", err.Error())
+	}
+	defer db.Close()
+
+	auth := &Auth{db: db}
+
 	r := gin.Default()
+	r.POST("/api/auth/sign-up", auth.signUp)
 
-	r.POST("/sign-up", signUp)
-	r.GET("/users", getAllUsers)
-	r.GET("/users/:id", getUserByID)
-
-	fmt.Println("Server started at :8080")
+	fmt.Println("Auth Server started at :8080")
 	if err := r.Run(":8080"); err != nil {
-		fmt.Printf("Failed to start server: %v\n", err)
+		log.Fatalf("Failed to start server: %s\n", err.Error())
 	}
 }
 
-func getAllUsers(c *gin.Context) {
-	userList := make(map[string]UserResponse)
-	for id, user := range users {
-		userList[id] = UserResponse{
-			Name:  user.Name,
-			Role:  user.Role,
-		}
-	}
-	c.JSON(http.StatusOK, gin.H{"users": userList})
-}
-
-func getUserByID(c *gin.Context) {
-	id := c.Param("id")
-	user, exists := users[id]
-	if !exists {
-		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "user not found"})
-		return
-	}
-
-	response := UserResponse{
-		Name:  user.Name,
-		Role:  user.Role,
-	}
-
-	c.JSON(http.StatusOK, response)
-}
-
-func signUp(c *gin.Context) {
-	var input User
+func (a *Auth) signUp(c *gin.Context) {
+	var input pkg.User
 
 	if err := c.BindJSON(&input); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"err": fmt.Sprintf("can't bind JSON: %s", err.Error())})
@@ -78,18 +51,10 @@ func signUp(c *gin.Context) {
 
 	// валидация???
 
-	if err := createUser(&input); err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"err": fmt.Sprintf("can't create user: %s", err.Error())})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"status": "ok"})
-}
-
-func createUser(input *User) error {
 	id, err := uuid.NewRandom()
 	if err != nil {
-		return fmt.Errorf("failed to generate UUID: %s", err.Error())
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"err": fmt.Sprintf("can't to generate UUID: %s", err.Error())})
+		return
 	}
 
 	hashedPassword := generatePasswordHash(input.Password)
@@ -97,9 +62,17 @@ func createUser(input *User) error {
 	input.Id = id.String()
 	input.Password = hashedPassword
 
-	users[input.Id] = input
+	// такой чел уже есть???
 
-	return nil
+	query := "INSERT INTO users (login, password_hash, name, role) values ($1, $2, $3, $4)"
+
+	_, err = a.db.Exec(query, input.Login, input.Password, input.Name, input.Role)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"err": fmt.Sprintf("can't create user in db: %s", err.Error())})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": "ok"})
 }
 
 func generatePasswordHash(password string) string {
