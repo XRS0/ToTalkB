@@ -5,7 +5,6 @@ import (
 	"time"
 )
 
-// Notification represents the core domain entity for notifications
 type Notification struct {
 	ID        string          `json:"id"`
 	Type      string          `json:"type"`
@@ -15,7 +14,6 @@ type Notification struct {
 	UpdatedAt time.Time       `json:"updated_at"`
 }
 
-// Status represents the current state of a notification
 type Status string
 
 const (
@@ -25,14 +23,12 @@ const (
 	StatusCancelled Status = "cancelled"
 )
 
-// NotificationRepository defines the interface for notification persistence
 type NotificationRepository interface {
 	Save(notification *Notification) error
 	FindByID(id string) (*Notification, error)
 	Update(notification *Notification) error
 }
 
-// NotificationService defines the domain service interface
 type NotificationService interface {
 	ProcessNotification(notification *Notification) error
 	MarkAsSent(notification *Notification) error

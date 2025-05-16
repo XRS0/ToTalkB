@@ -10,12 +10,10 @@ import (
 	_ "github.com/lib/pq"
 )
 
-// Repository implements domain.NotificationRepository
 type Repository struct {
 	db *sql.DB
 }
 
-// NewRepository creates a new PostgreSQL repository
 func NewRepository(dsn string) (*Repository, error) {
 	db, err := sql.Open("postgres", dsn)
 	if err != nil {
@@ -29,7 +27,6 @@ func NewRepository(dsn string) (*Repository, error) {
 	return &Repository{db: db}, nil
 }
 
-// Save implements domain.NotificationRepository
 func (r *Repository) Save(notification *domain.Notification) error {
 	if notification.ID == "" {
 		notification.ID = uuid.New().String()
@@ -52,7 +49,6 @@ func (r *Repository) Save(notification *domain.Notification) error {
 	return err
 }
 
-// FindByID implements domain.NotificationRepository
 func (r *Repository) FindByID(id string) (*domain.Notification, error) {
 	query := `
 		SELECT id, type, payload, status, created_at, updated_at
@@ -80,7 +76,6 @@ func (r *Repository) FindByID(id string) (*domain.Notification, error) {
 	return &notification, nil
 }
 
-// Update implements domain.NotificationRepository
 func (r *Repository) Update(notification *domain.Notification) error {
 	notification.UpdatedAt = time.Now()
 
