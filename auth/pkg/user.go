@@ -9,6 +9,11 @@ type User struct {
 }
 
 type UserResponse struct {
-	Name  string `json:"name"`
-	Role  string `json:"role"`
+	Name string `json:"name"`
+	Role string `json:"role"`
+}
+
+type SignInRequest struct {
+	Login    string `json:"login" db:"login" binding:"required"`
+	Password string `json:"password" db:"password_hash" binding:"required"`
 }
