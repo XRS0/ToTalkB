@@ -1,5 +1,7 @@
 server:
   port: 8080
+  grpc_port: 9090
+  host: localhost
 
 kafka:
   brokers:

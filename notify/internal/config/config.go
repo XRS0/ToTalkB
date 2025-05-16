@@ -11,7 +11,9 @@ type Config struct {
 }
 
 type ServerConfig struct {
-	Port int `mapstructure:"port"`
+	Port     int    `mapstructure:"port"`
+	GRPCPort int    `mapstructure:"grpc_port"`
+	Host     string `mapstructure:"host"`
 }
 
 type KafkaConfig struct {
