@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	"notify/internal/config"
-	"notify/internal/infrastructure/grpc"
+	grpcserver "notify/internal/infrastructure/grpc"
 	"notify/internal/infrastructure/kafka"
 	"notify/internal/service"
 
@@ -34,7 +34,7 @@ func NewServer(cfg *config.Config) *Server {
 	svc := service.NewNotificationService()
 	consumer := kafka.NewConsumer(kafkaConfig, svc)
 	grpcServer := grpc.NewServer()
-	grpc.RegisterServer(grpcServer, svc)
+	grpcserver.RegisterServer(grpcServer, svc)
 
 	srv := &Server{
 		config:   cfg,
@@ -50,7 +50,6 @@ func NewServer(cfg *config.Config) *Server {
 }
 
 func (s *Server) Start(ctx context.Context) error {
-	// Start gRPC server
 	go func() {
 		lis, err := net.Listen("tcp", fmt.Sprintf(":%d", s.config.Server.GRPCPort))
 		if err != nil {
@@ -61,10 +60,8 @@ func (s *Server) Start(ctx context.Context) error {
 		}
 	}()
 
-	// Start Kafka consumer
 	go s.consumer.Start(ctx)
 
-	// Start HTTP server
 	return s.http.ListenAndServe()
 }
 
