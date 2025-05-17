@@ -5,14 +5,12 @@ import (
 	"time"
 
 	"notify/internal/domain/gen"
-	"notify/internal/domain/gen"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
 
 type Client struct {
-	client gen.NotificationServiceClient
 	client gen.NotificationServiceClient
 	conn   *grpc.ClientConn
 }
@@ -23,7 +21,6 @@ func NewClient(address string) (*Client, error) {
 		return nil, err
 	}
 
-	client := gen.NewNotificationServiceClient(conn)
 	client := gen.NewNotificationServiceClient(conn)
 	return &Client{
 		client: client,
@@ -40,7 +37,6 @@ func (c *Client) SendNotification(ctx context.Context, notificationType string, 
 	defer cancel()
 
 	resp, err := c.client.SendNotification(ctx, &gen.SendNotificationRequest{
-	resp, err := c.client.SendNotification(ctx, &gen.SendNotificationRequest{
 		Type:    notificationType,
 		Payload: payload,
 	})
@@ -52,11 +48,9 @@ func (c *Client) SendNotification(ctx context.Context, notificationType string, 
 }
 
 func (c *Client) GetNotificationStatus(ctx context.Context, id string) (*gen.GetNotificationStatusResponse, error) {
-func (c *Client) GetNotificationStatus(ctx context.Context, id string) (*gen.GetNotificationStatusResponse, error) {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	return c.client.GetNotificationStatus(ctx, &gen.GetNotificationStatusRequest{
 	return c.client.GetNotificationStatus(ctx, &gen.GetNotificationStatusRequest{
 		Id: id,
 	})
