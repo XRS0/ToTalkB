@@ -114,13 +114,13 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request, db *sqlx.DB, user
 	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), db: db, userId: userId, chatId: chatId}
 
 	messages, err := loadChatHistory(db, chatId)
-    if err != nil {
-        log.Printf("Failed to load chat history: %v", err)
-    } else {
-        for _, msg := range messages {
-            client.send <- []byte(msg.Content)
-        }
-    }
+	if err != nil {
+		log.Printf("Failed to load chat history: %v", err)
+	} else {
+		for _, msg := range messages {
+			client.send <- []byte(msg.Content)
+		}
+	}
 
 	client.hub.register <- client
 	go client.writePump()
@@ -128,16 +128,20 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request, db *sqlx.DB, user
 }
 
 func loadChatHistory(db *sqlx.DB, chatId string) ([]pkg.Message, error) {
-    var messages []pkg.Message
-    query := `
-        SELECT sender_name, content, created_at
-        FROM messages
-        WHERE chat_id = $1
-        ORDER BY created_at ASC
+	var messages []pkg.Message
+	query := `
+        SELECT 
+    	m.content
+		FROM 
+    	messages m
+		WHERE 
+    	m.chat_id = $1
+		ORDER BY 
+    	m.created_at
     `
-    err := db.Select(&messages, query, chatId)
-    if err != nil {
-        return nil, err
-    }
-    return messages, nil
+	err := db.Select(&messages, query, chatId)
+	if err != nil {
+		return nil, err
+	}
+	return messages, nil
 }

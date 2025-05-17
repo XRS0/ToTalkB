@@ -1,9 +1,11 @@
 package pkg
 
+import "time"
+
 type Message struct {
-	Id         string `json:"id"`
-	ChatId     string `json:"chat_id"`
-	SenderId   string `json:"sender_id"`
-	SenderName string `json:"sender_name"`
-	Content    string `json:"content"`
+	Id        int       `json:"id" db:"id"`
+	ChatId    int       `json:"chat_id" db:"chat_id"`
+	SenderId  int       `json:"sender_id" db:"sender_id"`
+	Content   string    `json:"content" db:"content"`
+	CreatedAt time.Time `json:"created_at" db:"created_at"`
 }

@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 	"net/http"
+	"strconv"
 
-	"github.com/XRS0/ToTalkB/auth"
 	"github.com/XRS0/ToTalkB/auth/db"
 	"github.com/XRS0/ToTalkB/auth/middleware"
 	"github.com/XRS0/ToTalkB/chat"
@@ -29,21 +29,30 @@ func main() {
 	r := gin.Default()
 	r.Use(middleware.CORSMiddleware())
 
-	r.GET("/", serveHome)
+	r.GET("/chat/:chatId", serveHome)
+	r.GET("/ws/:chatId", func(c *gin.Context) {
+		userId := "1"
+		chatId := c.Param("chatId")
+		chat.ServeWs(hub, c.Writer, c.Request, db, userId, chatId)
+	})
 	api := r.Group("/api", middleware.UserIdentity)
 	api.POST("/chat", func(c *gin.Context) {
 		var input pkg.Chat
 
-		input.OwnerId = c.GetString("userId")
+		uid, err := strconv.Atoi(c.GetString("userId"))
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, err)
+		}
+		input.OwnerId = uid
 
 		if err := c.ShouldBindJSON(&input); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
+			c.AbortWithStatusJSON(http.StatusInternalServerError, err)
 			return
 		}
 
 		tx, err := db.Begin()
 		if err != nil {
-			log.Fatal(err)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, err)
 		}
 		defer tx.Rollback()
 
@@ -82,14 +91,6 @@ func main() {
 			"name":     input.Name,
 			"owner_id": input.OwnerId,
 		})
-	})
-	r.GET("/ws/:chatId", func(c *gin.Context) {
-		userId, err := auth.ParseAccessToken(c.GetHeader("Authorization"))
-		if err != nil {
-			log.Fatalf("can't get user id: %s", err.Error())
-		}
-		chatId := c.Param("chatId")
-		chat.ServeWs(hub, c.Writer, c.Request, db, userId, chatId)
 	})
 
 	r.Run(":8081")
