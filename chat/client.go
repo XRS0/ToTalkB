@@ -120,7 +120,7 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request, db *sqlx.DB, user
 	} else {
 		for _, msg := range messages {
             timeStr := msg.CreatedAt.Format("02.01 15:04")
-            formattedMsg := fmt.Sprintf("[%s] %s: %s", timeStr, msg.SenderName, msg.Content)
+            formattedMsg := fmt.Sprintf("[%s] %s", timeStr, msg.Content)
             client.send <- []byte(formattedMsg)
         }
 	}
@@ -133,16 +133,11 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request, db *sqlx.DB, user
 func loadChatHistory(db *sqlx.DB, chatId string) ([]pkg.Message, error) {
 	var messages []pkg.Message
 	query := `
-        SELECT sender_name, content, created_at
+        SELECT content, created_at
         FROM messages
         WHERE chat_id = $1
         ORDER BY created_at ASC
     `
-	err := db.Select(&messages, query, chatId)
-	if err != nil {
-		return nil, err
-	}
-	return messages, nil
 	err := db.Select(&messages, query, chatId)
 	if err != nil {
 		return nil, err

@@ -1,12 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
 
-	"github.com/XRS0/ToTalkB/auth"
 	"github.com/XRS0/ToTalkB/auth/db"
 	"github.com/XRS0/ToTalkB/auth/middleware"
 	"github.com/XRS0/ToTalkB/chat"
@@ -33,7 +31,7 @@ func main() {
 
 	r.GET("/chat/:chatId", serveHome)
 	r.GET("/ws/:chatId", func(c *gin.Context) {
-		userId := "1"
+		userId := "1" // !!!
 		chatId := c.Param("chatId")
 		chat.ServeWs(hub, c.Writer, c.Request, db, userId, chatId)
 	})
@@ -93,15 +91,6 @@ func main() {
 			"name":     input.Name,
 			"owner_id": input.OwnerId,
 		})
-	})
-	r.GET("/ws/:chatId", func(c *gin.Context) {
-		userId, err := auth.ParseAccessToken(c.GetHeader("Authorization"))
-		if err != nil {
-			c.AbortWithStatusJSON(http.StatusInternalServerError, fmt.Sprintf("can't get user id: %s", err.Error()))
-			return
-		}
-		chatId := c.Param("chatId")
-		chat.ServeWs(hub, c.Writer, c.Request, db, userId, chatId)
 	})
 
 	r.Run(":8081")
