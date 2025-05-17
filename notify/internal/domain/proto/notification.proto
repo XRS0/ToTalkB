@@ -16,6 +16,7 @@ message SendNotificationRequest {
 
 message SendNotificationResponse {
   string id = 1;
+  string status = 2;
 }
 
 message GetNotificationStatusRequest {
@@ -25,4 +26,6 @@ message GetNotificationStatusRequest {
 message GetNotificationStatusResponse {
   string id = 1;
   string status = 2;
+  string created_at = 3;
+  string updated_at = 4;
 }
