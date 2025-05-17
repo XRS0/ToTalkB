@@ -6,11 +6,13 @@ import (
 
 	"notify/internal/domain"
 	"notify/internal/domain/gen"
+	"notify/internal/domain/gen"
 
 	"google.golang.org/grpc"
 )
 
 type Server struct {
+	gen.UnimplementedNotificationServiceServer
 	gen.UnimplementedNotificationServiceServer
 	service domain.NotificationService
 }
@@ -22,6 +24,7 @@ func NewServer(service domain.NotificationService) *Server {
 }
 
 func (s *Server) SendNotification(ctx context.Context, req *gen.SendNotificationRequest) (*gen.SendNotificationResponse, error) {
+func (s *Server) SendNotification(ctx context.Context, req *gen.SendNotificationRequest) (*gen.SendNotificationResponse, error) {
 	notification := &domain.Notification{
 		Type:    req.Type,
 		Payload: req.Payload,
@@ -32,14 +35,17 @@ func (s *Server) SendNotification(ctx context.Context, req *gen.SendNotification
 	}
 
 	return &gen.SendNotificationResponse{
+	return &gen.SendNotificationResponse{
 		Id:     notification.ID,
 		Status: string(notification.Status),
 	}, nil
 }
 
 func (s *Server) GetNotificationStatus(ctx context.Context, req *gen.GetNotificationStatusRequest) (*gen.GetNotificationStatusResponse, error) {
+func (s *Server) GetNotificationStatus(ctx context.Context, req *gen.GetNotificationStatusRequest) (*gen.GetNotificationStatusResponse, error) {
 	// Implementation would depend on your repository interface
 	// This is a placeholder
+	return &gen.GetNotificationStatusResponse{
 	return &gen.GetNotificationStatusResponse{
 		Id:        req.Id,
 		Status:    "pending",
@@ -49,5 +55,6 @@ func (s *Server) GetNotificationStatus(ctx context.Context, req *gen.GetNotifica
 }
 
 func RegisterServer(s *grpc.Server, service domain.NotificationService) {
+	gen.RegisterNotificationServiceServer(s, NewServer(service))
 	gen.RegisterNotificationServiceServer(s, NewServer(service))
 }
