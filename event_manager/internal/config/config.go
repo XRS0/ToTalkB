@@ -5,7 +5,7 @@ import (
 )
 
 type Config struct {
-	Server   ServerConfig   `mapstructure:"server"`
+	Server   ServerConfig   `mapstructure:"server_event-manager"`
 	Database DatabaseConfig `mapstructure:"database"`
 }
 
