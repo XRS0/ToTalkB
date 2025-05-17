@@ -6,7 +6,6 @@ import (
 
 type Config struct {
 	Server   ServerConfig   `mapstructure:"server"`
-	Kafka    KafkaConfig    `mapstructure:"kafka"`
 	Database DatabaseConfig `mapstructure:"database"`
 }
 
@@ -14,16 +13,6 @@ type ServerConfig struct {
 	Port     int    `mapstructure:"port"`
 	GRPCPort int    `mapstructure:"grpc_port"`
 	Host     string `mapstructure:"host"`
-}
-
-type KafkaConfig struct {
-	Brokers []string `mapstructure:"brokers"`
-	GroupID string   `mapstructure:"group_id"`
-	Topics  Topics   `mapstructure:"topics"`
-}
-
-type Topics struct {
-	Notifications string `mapstructure:"notifications"`
 }
 
 type DatabaseConfig struct {

@@ -2,9 +2,9 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v3.21.12
-// source: notify/internal/domain/proto/notification.proto
+// source: proto/notification.proto
 
-package proto
+package gen
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -31,7 +31,7 @@ type SendNotificationRequest struct {
 
 func (x *SendNotificationRequest) Reset() {
 	*x = SendNotificationRequest{}
-	mi := &file_notify_internal_domain_proto_notification_proto_msgTypes[0]
+	mi := &file_proto_notification_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -43,7 +43,7 @@ func (x *SendNotificationRequest) String() string {
 func (*SendNotificationRequest) ProtoMessage() {}
 
 func (x *SendNotificationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_notify_internal_domain_proto_notification_proto_msgTypes[0]
+	mi := &file_proto_notification_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -56,7 +56,7 @@ func (x *SendNotificationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SendNotificationRequest.ProtoReflect.Descriptor instead.
 func (*SendNotificationRequest) Descriptor() ([]byte, []int) {
-	return file_notify_internal_domain_proto_notification_proto_rawDescGZIP(), []int{0}
+	return file_proto_notification_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *SendNotificationRequest) GetType() string {
@@ -83,7 +83,7 @@ type SendNotificationResponse struct {
 
 func (x *SendNotificationResponse) Reset() {
 	*x = SendNotificationResponse{}
-	mi := &file_notify_internal_domain_proto_notification_proto_msgTypes[1]
+	mi := &file_proto_notification_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -95,7 +95,7 @@ func (x *SendNotificationResponse) String() string {
 func (*SendNotificationResponse) ProtoMessage() {}
 
 func (x *SendNotificationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_notify_internal_domain_proto_notification_proto_msgTypes[1]
+	mi := &file_proto_notification_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -108,7 +108,7 @@ func (x *SendNotificationResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SendNotificationResponse.ProtoReflect.Descriptor instead.
 func (*SendNotificationResponse) Descriptor() ([]byte, []int) {
-	return file_notify_internal_domain_proto_notification_proto_rawDescGZIP(), []int{1}
+	return file_proto_notification_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *SendNotificationResponse) GetId() string {
@@ -134,7 +134,7 @@ type GetNotificationStatusRequest struct {
 
 func (x *GetNotificationStatusRequest) Reset() {
 	*x = GetNotificationStatusRequest{}
-	mi := &file_notify_internal_domain_proto_notification_proto_msgTypes[2]
+	mi := &file_proto_notification_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -146,7 +146,7 @@ func (x *GetNotificationStatusRequest) String() string {
 func (*GetNotificationStatusRequest) ProtoMessage() {}
 
 func (x *GetNotificationStatusRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_notify_internal_domain_proto_notification_proto_msgTypes[2]
+	mi := &file_proto_notification_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -159,7 +159,7 @@ func (x *GetNotificationStatusRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetNotificationStatusRequest.ProtoReflect.Descriptor instead.
 func (*GetNotificationStatusRequest) Descriptor() ([]byte, []int) {
-	return file_notify_internal_domain_proto_notification_proto_rawDescGZIP(), []int{2}
+	return file_proto_notification_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *GetNotificationStatusRequest) GetId() string {
@@ -181,7 +181,7 @@ type GetNotificationStatusResponse struct {
 
 func (x *GetNotificationStatusResponse) Reset() {
 	*x = GetNotificationStatusResponse{}
-	mi := &file_notify_internal_domain_proto_notification_proto_msgTypes[3]
+	mi := &file_proto_notification_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -193,7 +193,7 @@ func (x *GetNotificationStatusResponse) String() string {
 func (*GetNotificationStatusResponse) ProtoMessage() {}
 
 func (x *GetNotificationStatusResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_notify_internal_domain_proto_notification_proto_msgTypes[3]
+	mi := &file_proto_notification_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -206,7 +206,7 @@ func (x *GetNotificationStatusResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetNotificationStatusResponse.ProtoReflect.Descriptor instead.
 func (*GetNotificationStatusResponse) Descriptor() ([]byte, []int) {
-	return file_notify_internal_domain_proto_notification_proto_rawDescGZIP(), []int{3}
+	return file_proto_notification_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *GetNotificationStatusResponse) GetId() string {
@@ -237,11 +237,11 @@ func (x *GetNotificationStatusResponse) GetUpdatedAt() string {
 	return ""
 }
 
-var File_notify_internal_domain_proto_notification_proto protoreflect.FileDescriptor
+var File_proto_notification_proto protoreflect.FileDescriptor
 
-const file_notify_internal_domain_proto_notification_proto_rawDesc = "" +
+const file_proto_notification_proto_rawDesc = "" +
 	"\n" +
-	"/notify/internal/domain/proto/notification.proto\x12\fnotification\"G\n" +
+	"\x18proto/notification.proto\x12\x03gen\"G\n" +
 	"\x17SendNotificationRequest\x12\x12\n" +
 	"\x04type\x18\x01 \x01(\tR\x04type\x12\x18\n" +
 	"\apayload\x18\x02 \x01(\fR\apayload\"B\n" +
@@ -256,35 +256,35 @@ const file_notify_internal_domain_proto_notification_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\x03 \x01(\tR\tcreatedAt\x12\x1d\n" +
 	"\n" +
-	"updated_at\x18\x04 \x01(\tR\tupdatedAt2\xea\x01\n" +
-	"\x13NotificationService\x12a\n" +
-	"\x10SendNotification\x12%.notification.SendNotificationRequest\x1a&.notification.SendNotificationResponse\x12p\n" +
-	"\x15GetNotificationStatus\x12*.notification.GetNotificationStatusRequest\x1a+.notification.GetNotificationStatusResponseB\x1eZ\x1cnotify/internal/domain/protob\x06proto3"
+	"updated_at\x18\x04 \x01(\tR\tupdatedAt2\xc6\x01\n" +
+	"\x13NotificationService\x12O\n" +
+	"\x10SendNotification\x12\x1c.gen.SendNotificationRequest\x1a\x1d.gen.SendNotificationResponse\x12^\n" +
+	"\x15GetNotificationStatus\x12!.gen.GetNotificationStatusRequest\x1a\".gen.GetNotificationStatusResponseB\aZ\x05./genb\x06proto3"
 
 var (
-	file_notify_internal_domain_proto_notification_proto_rawDescOnce sync.Once
-	file_notify_internal_domain_proto_notification_proto_rawDescData []byte
+	file_proto_notification_proto_rawDescOnce sync.Once
+	file_proto_notification_proto_rawDescData []byte
 )
 
-func file_notify_internal_domain_proto_notification_proto_rawDescGZIP() []byte {
-	file_notify_internal_domain_proto_notification_proto_rawDescOnce.Do(func() {
-		file_notify_internal_domain_proto_notification_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_notify_internal_domain_proto_notification_proto_rawDesc), len(file_notify_internal_domain_proto_notification_proto_rawDesc)))
+func file_proto_notification_proto_rawDescGZIP() []byte {
+	file_proto_notification_proto_rawDescOnce.Do(func() {
+		file_proto_notification_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_proto_notification_proto_rawDesc), len(file_proto_notification_proto_rawDesc)))
 	})
-	return file_notify_internal_domain_proto_notification_proto_rawDescData
+	return file_proto_notification_proto_rawDescData
 }
 
-var file_notify_internal_domain_proto_notification_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
-var file_notify_internal_domain_proto_notification_proto_goTypes = []any{
-	(*SendNotificationRequest)(nil),       // 0: notification.SendNotificationRequest
-	(*SendNotificationResponse)(nil),      // 1: notification.SendNotificationResponse
-	(*GetNotificationStatusRequest)(nil),  // 2: notification.GetNotificationStatusRequest
-	(*GetNotificationStatusResponse)(nil), // 3: notification.GetNotificationStatusResponse
+var file_proto_notification_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_proto_notification_proto_goTypes = []any{
+	(*SendNotificationRequest)(nil),       // 0: gen.SendNotificationRequest
+	(*SendNotificationResponse)(nil),      // 1: gen.SendNotificationResponse
+	(*GetNotificationStatusRequest)(nil),  // 2: gen.GetNotificationStatusRequest
+	(*GetNotificationStatusResponse)(nil), // 3: gen.GetNotificationStatusResponse
 }
-var file_notify_internal_domain_proto_notification_proto_depIdxs = []int32{
-	0, // 0: notification.NotificationService.SendNotification:input_type -> notification.SendNotificationRequest
-	2, // 1: notification.NotificationService.GetNotificationStatus:input_type -> notification.GetNotificationStatusRequest
-	1, // 2: notification.NotificationService.SendNotification:output_type -> notification.SendNotificationResponse
-	3, // 3: notification.NotificationService.GetNotificationStatus:output_type -> notification.GetNotificationStatusResponse
+var file_proto_notification_proto_depIdxs = []int32{
+	0, // 0: gen.NotificationService.SendNotification:input_type -> gen.SendNotificationRequest
+	2, // 1: gen.NotificationService.GetNotificationStatus:input_type -> gen.GetNotificationStatusRequest
+	1, // 2: gen.NotificationService.SendNotification:output_type -> gen.SendNotificationResponse
+	3, // 3: gen.NotificationService.GetNotificationStatus:output_type -> gen.GetNotificationStatusResponse
 	2, // [2:4] is the sub-list for method output_type
 	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -292,26 +292,26 @@ var file_notify_internal_domain_proto_notification_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_notify_internal_domain_proto_notification_proto_init() }
-func file_notify_internal_domain_proto_notification_proto_init() {
-	if File_notify_internal_domain_proto_notification_proto != nil {
+func init() { file_proto_notification_proto_init() }
+func file_proto_notification_proto_init() {
+	if File_proto_notification_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_notify_internal_domain_proto_notification_proto_rawDesc), len(file_notify_internal_domain_proto_notification_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_notification_proto_rawDesc), len(file_proto_notification_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_notify_internal_domain_proto_notification_proto_goTypes,
-		DependencyIndexes: file_notify_internal_domain_proto_notification_proto_depIdxs,
-		MessageInfos:      file_notify_internal_domain_proto_notification_proto_msgTypes,
+		GoTypes:           file_proto_notification_proto_goTypes,
+		DependencyIndexes: file_proto_notification_proto_depIdxs,
+		MessageInfos:      file_proto_notification_proto_msgTypes,
 	}.Build()
-	File_notify_internal_domain_proto_notification_proto = out.File
-	file_notify_internal_domain_proto_notification_proto_goTypes = nil
-	file_notify_internal_domain_proto_notification_proto_depIdxs = nil
+	File_proto_notification_proto = out.File
+	file_proto_notification_proto_goTypes = nil
+	file_proto_notification_proto_depIdxs = nil
 }
