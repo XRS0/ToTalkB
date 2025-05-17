@@ -27,6 +27,22 @@ type Auth struct {
 	db *sqlx.DB
 }
 
+func CORSMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(http.StatusNoContent)
+			return
+		}
+
+		c.Next()
+	}
+}
+
 func main() {
 	db, err := db.NewPostgresDB(db.Config{Host: "localhost", Port: "5432", Username: "postgres", Password: "postgres", DBName: "postgres", SSLMode: "disable"})
 	if err != nil {
@@ -37,6 +53,8 @@ func main() {
 	auth := &Auth{db: db}
 
 	r := gin.Default()
+	r.Use(CORSMiddleware())
+
 	r.POST("/api/auth/sign-up", auth.signUp)
 	r.POST("/api/auth/sign-in", auth.signIn)
 
