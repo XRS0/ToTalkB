@@ -1,8 +1,9 @@
 package pkg
 
 type Message struct {
-	ID       int    `json:"id"`
-	ChatID   int    `json:"chat_id"`
-	SenderID int    `json:"sender_id"`
-	Content  string `json:"content"`
+	Id         string `json:"id"`
+	ChatId     string `json:"chat_id"`
+	SenderId   string `json:"sender_id"`
+	SenderName string `json:"sender_name"`
+	Content    string `json:"content"`
 }

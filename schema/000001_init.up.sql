@@ -22,5 +22,6 @@ CREATE TABLE messages (
     id         serial PRIMARY KEY,
     chat_id    integer NOT NULL REFERENCES chats(id) ON DELETE CASCADE,
     sender_id  integer NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    created_at timestamp NOT NULL DEFAULT now(),
     content    text NOT NULL
 );
