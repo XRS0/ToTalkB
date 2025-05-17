@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package gen;
+
+option go_package = "./gen";
+
+service EventService {
+  rpc ProcessEvent (ProcessEventRequest) returns (ProcessEventResponse);
+  rpc GetEventStatus (GetEventStatusRequest) returns (GetEventStatusResponse);
+}
+
+message ProcessEventRequest {
+  string type = 1;
+  string source = 2;
+  bytes payload = 3;
+}
+
+message ProcessEventResponse {
+  string id = 1;
+  string status = 2;
+}
+
+message GetEventStatusRequest {
+  string id = 1;
+}
+
+message GetEventStatusResponse {
+  string id = 1;
+  string type = 2;
+  string source = 3;
+  string status = 4;
+  string created_at = 5;
+  string updated_at = 6;
+} 
