@@ -143,4 +143,10 @@ func loadChatHistory(db *sqlx.DB, chatId string) ([]pkg.Message, error) {
 		return nil, err
 	}
 	return messages, nil
+	err := db.Select(&messages, query, chatId)
+	if err != nil {
+		return nil, err
+	}
+	return messages, nil
 }
+

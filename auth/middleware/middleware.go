@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/XRS0/ToTalkB/auth"
 	"github.com/gin-gonic/gin"
@@ -24,7 +25,7 @@ func CORSMiddleware() gin.HandlerFunc {
 }
 
 func UserIdentity(c *gin.Context) {
-	userId, err := auth.ParseAccessToken(c.GetHeader("Authorization"))
+	userId, err := auth.ParseAccessToken(strings.Split(c.GetHeader("Authorization"), " ")[1])
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"err": err.Error()})
 		return
