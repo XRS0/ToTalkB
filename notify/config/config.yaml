@@ -3,13 +3,6 @@ server:
   grpc_port: 9090
   host: localhost
 
-kafka:
-  brokers:
-    - localhost:9092
-  group_id: notification-service
-  topics:
-    notifications: notifications
-
 database:
   host: localhost
   port: 5432

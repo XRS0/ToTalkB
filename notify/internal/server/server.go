@@ -8,39 +8,26 @@ import (
 
 	"notify/internal/config"
 	grpcserver "notify/internal/infrastructure/grpc"
-	"notify/internal/infrastructure/kafka"
 	"notify/internal/service"
 
 	"google.golang.org/grpc"
 )
 
 type Server struct {
-	config   *config.Config
-	http     *http.Server
-	grpc     *grpc.Server
-	service  *service.NotificationService
-	consumer *kafka.Consumer
+	config  *config.Config
+	http    *http.Server
+	grpc    *grpc.Server
+	service *service.NotificationService
 }
 
-func NewServer(cfg *config.Config) *Server {
-	kafkaConfig := kafka.ConsumerConfig{
-		Brokers: cfg.Kafka.Brokers,
-		GroupID: cfg.Kafka.GroupID,
-		Topics: kafka.Topics{
-			Notifications: cfg.Kafka.Topics.Notifications,
-		},
-	}
-
-	svc := service.NewNotificationService()
-	consumer := kafka.NewConsumer(kafkaConfig, svc)
+func NewServer(cfg *config.Config, svc *service.NotificationService) *Server {
 	grpcServer := grpc.NewServer()
 	grpcserver.RegisterServer(grpcServer, svc)
 
 	srv := &Server{
-		config:   cfg,
-		service:  svc,
-		consumer: consumer,
-		grpc:     grpcServer,
+		config:  cfg,
+		service: svc,
+		grpc:    grpcServer,
 		http: &http.Server{
 			Addr: fmt.Sprintf(":%d", cfg.Server.Port),
 		},
@@ -59,8 +46,6 @@ func (s *Server) Start(ctx context.Context) error {
 			panic(err)
 		}
 	}()
-
-	go s.consumer.Start(ctx)
 
 	return s.http.ListenAndServe()
 }

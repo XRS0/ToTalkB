@@ -7,10 +7,10 @@ import (
 	"os/signal"
 	"syscall"
 
-	"notify/internal/application"
 	"notify/internal/config"
-	"notify/internal/infrastructure/kafka"
 	"notify/internal/infrastructure/persistence/postgres"
+	"notify/internal/server"
+	"notify/internal/service"
 )
 
 func main() {
@@ -25,26 +25,15 @@ func main() {
 	}
 	defer repository.Close()
 
-	notificationService := application.NewNotificationApplicationService(repository)
-
-	kafkaConfig := kafka.ConsumerConfig{
-		Brokers: cfg.Kafka.Brokers,
-		GroupID: cfg.Kafka.GroupID,
-		Topics: kafka.Topics{
-			Notifications: cfg.Kafka.Topics.Notifications,
-		},
-	}
-	consumer := kafka.NewConsumer(kafkaConfig, notificationService)
+	notificationService := service.NewNotificationService()
+	srv := server.NewServer(cfg, notificationService)
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	go func() {
-		if err := consumer.Start(ctx); err != nil {
-			log.Printf("Consumer error: %v", err)
-			cancel()
-		}
-	}()
+	if err := srv.Start(ctx); err != nil {
+		log.Fatalf("Failed to start server: %v", err)
+	}
 
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
