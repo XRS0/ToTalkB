@@ -76,6 +76,7 @@ func (x *SendNotificationRequest) GetPayload() []byte {
 type SendNotificationResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Status        string                 `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -113,6 +114,13 @@ func (*SendNotificationResponse) Descriptor() ([]byte, []int) {
 func (x *SendNotificationResponse) GetId() string {
 	if x != nil {
 		return x.Id
+	}
+	return ""
+}
+
+func (x *SendNotificationResponse) GetStatus() string {
+	if x != nil {
+		return x.Status
 	}
 	return ""
 }
@@ -165,6 +173,8 @@ type GetNotificationStatusResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Status        string                 `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
+	CreatedAt     string                 `protobuf:"bytes,3,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt     string                 `protobuf:"bytes,4,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -213,6 +223,20 @@ func (x *GetNotificationStatusResponse) GetStatus() string {
 	return ""
 }
 
+func (x *GetNotificationStatusResponse) GetCreatedAt() string {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return ""
+}
+
+func (x *GetNotificationStatusResponse) GetUpdatedAt() string {
+	if x != nil {
+		return x.UpdatedAt
+	}
+	return ""
+}
+
 var File_notify_internal_domain_proto_notification_proto protoreflect.FileDescriptor
 
 const file_notify_internal_domain_proto_notification_proto_rawDesc = "" +
@@ -220,14 +244,19 @@ const file_notify_internal_domain_proto_notification_proto_rawDesc = "" +
 	"/notify/internal/domain/proto/notification.proto\x12\fnotification\"G\n" +
 	"\x17SendNotificationRequest\x12\x12\n" +
 	"\x04type\x18\x01 \x01(\tR\x04type\x12\x18\n" +
-	"\apayload\x18\x02 \x01(\fR\apayload\"*\n" +
+	"\apayload\x18\x02 \x01(\fR\apayload\"B\n" +
 	"\x18SendNotificationResponse\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\".\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x16\n" +
+	"\x06status\x18\x02 \x01(\tR\x06status\".\n" +
 	"\x1cGetNotificationStatusRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"G\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"\x85\x01\n" +
 	"\x1dGetNotificationStatusResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x16\n" +
-	"\x06status\x18\x02 \x01(\tR\x06status2\xea\x01\n" +
+	"\x06status\x18\x02 \x01(\tR\x06status\x12\x1d\n" +
+	"\n" +
+	"created_at\x18\x03 \x01(\tR\tcreatedAt\x12\x1d\n" +
+	"\n" +
+	"updated_at\x18\x04 \x01(\tR\tupdatedAt2\xea\x01\n" +
 	"\x13NotificationService\x12a\n" +
 	"\x10SendNotification\x12%.notification.SendNotificationRequest\x1a&.notification.SendNotificationResponse\x12p\n" +
 	"\x15GetNotificationStatus\x12*.notification.GetNotificationStatusRequest\x1a+.notification.GetNotificationStatusResponseB\x1eZ\x1cnotify/internal/domain/protob\x06proto3"

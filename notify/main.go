@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"os"
 	"os/signal"
@@ -20,23 +19,14 @@ func main() {
 		log.Fatalf("Failed to load config: %v", err)
 	}
 
-	// Initialize repository
-	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		cfg.Database.Host,
-		cfg.Database.Port,
-		cfg.Database.User,
-		cfg.Database.Password,
-		cfg.Database.DBName,
-	)
-	repository, err := postgres.NewRepository(dsn)
+	repository, err := postgres.NewRepository(&cfg.Database)
 	if err != nil {
 		log.Fatalf("Failed to create repository: %v", err)
 	}
+	defer repository.Close()
 
-	// Initialize application service
 	notificationService := application.NewNotificationApplicationService(repository)
 
-	// Initialize Kafka consumer
 	kafkaConfig := kafka.ConsumerConfig{
 		Brokers: cfg.Kafka.Brokers,
 		GroupID: cfg.Kafka.GroupID,
@@ -49,7 +39,6 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	// Start Kafka consumer
 	go func() {
 		if err := consumer.Start(ctx); err != nil {
 			log.Printf("Consumer error: %v", err)
@@ -57,7 +46,6 @@ func main() {
 		}
 	}()
 
-	// Wait for interrupt signal
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
