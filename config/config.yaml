@@ -1,0 +1,21 @@
+server_notify:
+  port: 8080
+  grpc_port: 9090
+  host: localhost
+
+server_event-manager:
+  port: 8081
+  grpc_port: 9091
+  host: localhost
+
+server_auth:
+  port: 8082
+  grpc_port: 9092
+  host: localhost
+
+database:
+  host: localhost
+  port: 5432
+  user: postgres
+  password: postgres
+  dbname: totalk
