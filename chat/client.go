@@ -2,6 +2,7 @@ package chat
 
 import (
 	"bytes"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -114,13 +115,15 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request, db *sqlx.DB, user
 	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), db: db, userId: userId, chatId: chatId}
 
 	messages, err := loadChatHistory(db, chatId)
-    if err != nil {
-        log.Printf("Failed to load chat history: %v", err)
-    } else {
-        for _, msg := range messages {
-            client.send <- []byte(msg.Content)
+	if err != nil {
+		log.Printf("Failed to load chat history: %v", err)
+	} else {
+		for _, msg := range messages {
+            timeStr := msg.CreatedAt.Format("02.01 15:04")
+            formattedMsg := fmt.Sprintf("[%s] %s: %s", timeStr, msg.SenderName, msg.Content)
+            client.send <- []byte(formattedMsg)
         }
-    }
+	}
 
 	client.hub.register <- client
 	go client.writePump()
@@ -128,16 +131,16 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request, db *sqlx.DB, user
 }
 
 func loadChatHistory(db *sqlx.DB, chatId string) ([]pkg.Message, error) {
-    var messages []pkg.Message
-    query := `
+	var messages []pkg.Message
+	query := `
         SELECT sender_name, content, created_at
         FROM messages
         WHERE chat_id = $1
         ORDER BY created_at ASC
     `
-    err := db.Select(&messages, query, chatId)
-    if err != nil {
-        return nil, err
-    }
-    return messages, nil
+	err := db.Select(&messages, query, chatId)
+	if err != nil {
+		return nil, err
+	}
+	return messages, nil
 }

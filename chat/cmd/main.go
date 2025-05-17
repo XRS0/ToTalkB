@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -86,7 +87,8 @@ func main() {
 	r.GET("/ws/:chatId", func(c *gin.Context) {
 		userId, err := auth.ParseAccessToken(c.GetHeader("Authorization"))
 		if err != nil {
-			log.Fatalf("can't get user id: %s", err.Error())
+			c.AbortWithStatusJSON(http.StatusInternalServerError, fmt.Sprintf("can't get user id: %s", err.Error()))
+			return
 		}
 		chatId := c.Param("chatId")
 		chat.ServeWs(hub, c.Writer, c.Request, db, userId, chatId)
