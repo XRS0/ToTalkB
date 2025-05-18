@@ -8,4 +8,5 @@ type EventRepository interface {
 	Update(ctx context.Context, event *Event) error
 	Delete(ctx context.Context, id string) error
 	List(ctx context.Context) ([]*Event, error)
+	GetAll(ctx context.Context) ([]*Event, error)
 }

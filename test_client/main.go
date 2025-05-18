@@ -3,13 +3,14 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 	"time"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	gen "event_manager/internal/domain/gen"
+	gen "test_client/gen"
 )
 
 func main() {
@@ -95,7 +96,8 @@ func main() {
 	}
 	log.Printf("Processed next user: %s, status: %s", nextResp.Queue.UserId, nextResp.Queue.Status)
 
-	// Test 4: Send a direct notification
+	// Test 4: Notification service tests
+	// Send a direct notification
 	notifyPayload := map[string]interface{}{
 		"message":  "Test notification",
 		"priority": "high",
@@ -110,4 +112,34 @@ func main() {
 		log.Fatalf("Failed to send notification: %v", err)
 	}
 	log.Printf("Notification sent: ID=%s, Status=%s", notifyResp.Id, notifyResp.Status)
+
+	// Get notification status
+	time.Sleep(time.Second) // Give some time for processing
+	notifyStatus, err := notifyClient.GetNotificationStatus(ctx, &gen.GetNotificationStatusRequest{
+		Id: notifyResp.Id,
+	})
+	if err != nil {
+		log.Fatalf("Failed to get notification status: %v", err)
+	}
+	log.Printf("Notification status: ID=%s, Status=%s, Created=%s, Updated=%s",
+		notifyStatus.Id, notifyStatus.Status, notifyStatus.CreatedAt, notifyStatus.UpdatedAt)
+
+	// Test 5: Send multiple notifications
+	for i := 1; i <= 3; i++ {
+		multiNotifyPayload := map[string]interface{}{
+			"message":  fmt.Sprintf("Test notification %d", i),
+			"priority": "medium",
+		}
+		multiNotifyBytes, _ := json.Marshal(multiNotifyPayload)
+
+		multiNotifyResp, err := notifyClient.SendNotification(ctx, &gen.SendNotificationRequest{
+			Type:    "batch_notification",
+			Payload: multiNotifyBytes,
+		})
+		if err != nil {
+			log.Printf("Failed to send batch notification %d: %v", i, err)
+			continue
+		}
+		log.Printf("Batch notification %d sent: ID=%s", i, multiNotifyResp.Id)
+	}
 }

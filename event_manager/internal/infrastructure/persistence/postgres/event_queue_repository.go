@@ -1,6 +1,7 @@
 package postgres
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"time"
@@ -185,4 +186,102 @@ func (r *EventQueueRepository) GetPosition(eventID string, userID string) (int, 
 	}
 
 	return position, nil
+}
+
+func (r *EventQueueRepository) GetByEventID(ctx context.Context, eventID string) ([]*domain.EventQueue, error) {
+	query := `
+		SELECT id, event_id, user_id, status, position, created_at, updated_at
+		FROM event_queues
+		WHERE event_id = $1
+		ORDER BY position ASC
+	`
+
+	rows, err := r.db.QueryContext(ctx, query, eventID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var queues []*domain.EventQueue
+	for rows.Next() {
+		queue := &domain.EventQueue{}
+		err := rows.Scan(
+			&queue.ID,
+			&queue.EventID,
+			&queue.UserID,
+			&queue.Status,
+			&queue.Position,
+			&queue.CreatedAt,
+			&queue.UpdatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+		queues = append(queues, queue)
+	}
+
+	return queues, nil
+}
+
+func (r *EventQueueRepository) GetUserPosition(ctx context.Context, eventID, userID string) (int, error) {
+	query := `
+		SELECT position
+		FROM event_queues
+		WHERE event_id = $1 AND user_id = $2
+	`
+
+	var position int
+	err := r.db.QueryRowContext(ctx, query, eventID, userID).Scan(&position)
+	if err == sql.ErrNoRows {
+		return 0, fmt.Errorf("user not found in queue")
+	}
+	if err != nil {
+		return 0, err
+	}
+
+	return position, nil
+}
+
+func (r *EventQueueRepository) ProcessNext(ctx context.Context, eventID string) (*domain.EventQueue, error) {
+	query := `
+		SELECT id, event_id, user_id, status, position, created_at, updated_at
+		FROM event_queues
+		WHERE event_id = $1 AND status = $2
+		ORDER BY position ASC
+		LIMIT 1
+	`
+
+	queue := &domain.EventQueue{}
+	err := r.db.QueryRowContext(ctx, query, eventID, domain.QueueStatusWaiting).Scan(
+		&queue.ID,
+		&queue.EventID,
+		&queue.UserID,
+		&queue.Status,
+		&queue.Position,
+		&queue.CreatedAt,
+		&queue.UpdatedAt,
+	)
+
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	// Update status to active
+	queue.Status = string(domain.QueueStatusActive)
+	queue.UpdatedAt = time.Now()
+
+	updateQuery := `
+		UPDATE event_queues
+		SET status = $1, updated_at = $2
+		WHERE id = $3
+	`
+	_, err = r.db.ExecContext(ctx, updateQuery, queue.Status, queue.UpdatedAt, queue.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return queue, nil
 }

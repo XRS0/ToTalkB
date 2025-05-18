@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"context"
 	"time"
 )
 
@@ -41,6 +42,12 @@ type EventQueueRepository interface {
 	GetNext(eventID string) (*EventQueue, error)
 	// GetPosition получает позицию пользователя в очереди
 	GetPosition(eventID string, userID string) (int, error)
+	// GetByEventID находит все записи в очереди для конкретного события
+	GetByEventID(ctx context.Context, eventID string) ([]*EventQueue, error)
+	// GetUserPosition получает позицию пользователя в очереди
+	GetUserPosition(ctx context.Context, eventID, userID string) (int, error)
+	// ProcessNext обрабатывает следующую запись в очереди
+	ProcessNext(ctx context.Context, eventID string) (*EventQueue, error)
 }
 
 // EventQueueService определяет бизнес-логику для работы с очередью событий
