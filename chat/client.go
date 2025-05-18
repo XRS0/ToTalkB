@@ -2,7 +2,6 @@ package chat
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -165,9 +164,18 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request, db *sqlx.DB, user
 		log.Printf("Failed to load chat history: %v", err)
 	} else {
 		for _, msg := range messages {
-			timeStr := msg.CreatedAt.Format("02.01 15:04")
-			formattedMsg := fmt.Sprintf("[%s] %s", timeStr, msg.Content)
-			client.send <- []byte(formattedMsg)
+			outMsg := OutgoingMessage{
+				Content: msg.Content,
+				Sender:  msg.Sender,
+				Time:    msg.CreatedAt.Format("15:04"),
+			}
+			log.Println(outMsg)
+			jsonMsg, err := json.Marshal(outMsg)
+			if err != nil {
+				log.Printf("Failed to marshal history message: %v", err)
+				continue
+			}
+			client.send <- jsonMsg
 		}
 	}
 }
