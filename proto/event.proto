@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package gen_event;
+package gen_e;
 
-option go_package = "./gen_event";
+option go_package = "github.com/XRS0/ToTalkB/gen_e";
 
 // Сервис для работы с событиями
 service EventService {
