@@ -1,4 +1,4 @@
-module event_manager
+module github.com/XRS0/ToTalkB/event_manager
 
 go 1.21
 

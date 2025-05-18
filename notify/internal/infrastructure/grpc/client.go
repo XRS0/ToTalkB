@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"notify/internal/domain/gen"
+	"github.com/XRS0/ToTalkB/notify/internal/domain/gen"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"

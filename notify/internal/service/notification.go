@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	"notify/internal/domain"
+	"github.com/XRS0/ToTalkB/notify/internal/domain"
 )
 
 type NotificationService struct {

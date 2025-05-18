@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"sync"
 
-	"event_manager/internal/domain"
+	"github.com/XRS0/ToTalkB/event_manager/internal/domain"
 )
 
 type InMemoryEventRepository struct {

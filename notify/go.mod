@@ -1,4 +1,4 @@
-module notify
+module github.com/XRS0/ToTalkB/notify
 
 go 1.23.0
 

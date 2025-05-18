@@ -6,9 +6,10 @@ import (
 	"net"
 	"net/http"
 
-	"notify/internal/config"
-	grpcserver "notify/internal/infrastructure/grpc"
-	"notify/internal/service"
+	grpcserver "github.com/XRS0/ToTalkB/notify/internal/infrastructure/grpc"
+	"github.com/XRS0/ToTalkB/notify/internal/service"
+
+	"github.com/XRS0/ToTalkB/notify/internal/config"
 
 	"google.golang.org/grpc"
 )
