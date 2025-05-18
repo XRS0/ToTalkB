@@ -60,6 +60,11 @@ func generatePasswordHash(password string) string {
 	return fmt.Sprintf("%x", hash.Sum([]byte(salt)))
 }
 
+type TokenClaims struct {
+	jwt.StandardClaims
+	UserId string `json:"user_id"`
+}
+
 func (a *Auth) SignIn(c *gin.Context) {
 	var input pkg.SignInRequest
 
@@ -80,14 +85,17 @@ func (a *Auth) SignIn(c *gin.Context) {
 		return
 	}
 
-	accessToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
-		ExpiresAt: time.Now().Add(accessTTL).Unix(),
-		Subject:   userId,
+	accessToken := jwt.NewWithClaims(jwt.SigningMethodHS256, TokenClaims{
+		jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(accessTTL).Unix(),
+			Subject:   userId,
+		},
+		userId,
 	})
 
 	tokenString, err := accessToken.SignedString([]byte(signingKey))
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"err": fmt.Sprintf("can't create new access token: %s", err.Error())})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
 		return
 	}
 
@@ -97,7 +105,7 @@ func (a *Auth) SignIn(c *gin.Context) {
 func ParseAccessToken(accessToken string) (string, error) {
 	token, err := jwt.ParseWithClaims(
 		accessToken,
-		jwt.StandardClaims{},
+		&TokenClaims{},
 		func(t *jwt.Token) (interface{}, error) {
 			if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, errors.New("invalid signing method")
@@ -107,8 +115,8 @@ func ParseAccessToken(accessToken string) (string, error) {
 	if err != nil {
 		if ve, ok := err.(*jwt.ValidationError); ok {
 			if ve.Errors&jwt.ValidationErrorExpired != 0 {
-				if claims, ok := token.Claims.(*jwt.StandardClaims); ok {
-					return claims.Subject, errors.New("token has expired")
+				if claims, ok := token.Claims.(*TokenClaims); ok {
+					return claims.UserId, errors.New("token has expired")
 				}
 			}
 		}
@@ -118,10 +126,10 @@ func ParseAccessToken(accessToken string) (string, error) {
 	if !token.Valid {
 		return "", errors.New("token is invalid")
 	}
-	claims, ok := token.Claims.(*jwt.StandardClaims)
+	claims, ok := token.Claims.(*TokenClaims)
 	if !ok {
 		return "", errors.New("token claims are not of type *TokenClaims")
 	}
 
-	return claims.Subject, nil
+	return claims.UserId, nil
 }
