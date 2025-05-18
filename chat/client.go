@@ -1,10 +1,11 @@
 package chat
 
 import (
-	"bytes"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/XRS0/ToTalkB/chat/pkg"
@@ -27,6 +28,9 @@ var (
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
 }
 
 type Client struct {
@@ -38,6 +42,17 @@ type Client struct {
 	chatId string
 }
 
+type IncomingMessage struct {
+	Message string `json:"message"`
+	Sender  string `json:"sender"`
+}
+
+type OutgoingMessage struct {
+	Content string `json:"content"`
+	Sender  string `json:"sender"`
+	Time    string `json:"time"`
+}
+
 func (c *Client) readPump() {
 	defer func() {
 		c.hub.unregister <- c
@@ -45,28 +60,54 @@ func (c *Client) readPump() {
 	}()
 	c.conn.SetReadLimit(maxMessageSize)
 	c.conn.SetReadDeadline(time.Now().Add(pongWait))
-	c.conn.SetPongHandler(func(string) error { c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
+	c.conn.SetPongHandler(func(string) error {
+		c.conn.SetReadDeadline(time.Now().Add(pongWait))
+		return nil
+	})
+
 	for {
-		_, message, err := c.conn.ReadMessage()
+		_, msgBytes, err := c.conn.ReadMessage()
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				log.Printf("error: %v", err)
 			}
 			break
 		}
-		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
+
+		var incomingMsg IncomingMessage
+		if err := json.Unmarshal(msgBytes, &incomingMsg); err != nil {
+			log.Printf("invalid json: %v", err)
+			continue
+		}
+		log.Println(incomingMsg)
+
+		content := strings.TrimSpace(incomingMsg.Message)
+
 		_, err = c.db.Exec(
 			"INSERT INTO messages (chat_id, sender_id, created_at, content) VALUES ($1, $2, $3, $4)",
 			c.chatId,
 			c.userId,
 			time.Now(),
-			string(message),
+			content,
 		)
 		if err != nil {
 			log.Printf("Failed to save message to DB: %v", err)
 			continue
 		}
-		c.hub.broadcast <- message
+
+		outMsg := OutgoingMessage{
+			Content: content,
+			Sender:  incomingMsg.Sender,
+			Time:    time.Now().Format("15:04"),
+		}
+
+		jsonMsg, err := json.Marshal(outMsg)
+		if err != nil {
+			log.Printf("Failed to marshal json: %v", err)
+			continue
+		}
+
+		c.hub.broadcast <- jsonMsg
 	}
 }
 
@@ -114,20 +155,20 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request, db *sqlx.DB, user
 	}
 	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), db: db, userId: userId, chatId: chatId}
 
+	client.hub.register <- client
+	go client.writePump()
+	go client.readPump()
+
 	messages, err := loadChatHistory(db, chatId)
 	if err != nil {
 		log.Printf("Failed to load chat history: %v", err)
 	} else {
 		for _, msg := range messages {
-            timeStr := msg.CreatedAt.Format("02.01 15:04")
-            formattedMsg := fmt.Sprintf("[%s] %s", timeStr, msg.Content)
-            client.send <- []byte(formattedMsg)
-        }
+			timeStr := msg.CreatedAt.Format("02.01 15:04")
+			formattedMsg := fmt.Sprintf("[%s] %s", timeStr, msg.Content)
+			client.send <- []byte(formattedMsg)
+		}
 	}
-
-	client.hub.register <- client
-	go client.writePump()
-	go client.readPump()
 }
 
 func loadChatHistory(db *sqlx.DB, chatId string) ([]pkg.Message, error) {
@@ -144,4 +185,3 @@ func loadChatHistory(db *sqlx.DB, chatId string) ([]pkg.Message, error) {
 	}
 	return messages, nil
 }
-
