@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"notify/internal/domain/gen"
+	"github.com/XRS0/ToTalkB/notify/internal/domain/gen"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -33,7 +33,7 @@ func (c *Client) Close() error {
 	return c.conn.Close()
 }
 
-func (c *Client) SendNotification(ctx context.Context, notificationType string, payload []byte) (string, error) {
+func (c *Client) SendNotification(ctx context.Context, userID int, notificationType string, payload []byte) (string, error) {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 

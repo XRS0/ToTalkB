@@ -4,8 +4,9 @@ import (
 	"context"
 	"time"
 
-	"event_manager/internal/domain"
-	pb "event_manager/internal/domain/gen"
+	"github.com/XRS0/ToTalkB/event_manager/internal/domain"
+
+	pb "github.com/XRS0/ToTalkB/proto/gen_event"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

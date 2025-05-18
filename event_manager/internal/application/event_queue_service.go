@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"event_manager/internal/domain"
+	"github.com/XRS0/ToTalkB/event_manager/internal/domain"
 )
 
 type EventQueueService struct {

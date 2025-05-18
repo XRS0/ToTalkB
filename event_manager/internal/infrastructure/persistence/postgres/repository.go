@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	"event_manager/internal/domain"
+	"github.com/XRS0/ToTalkB/event_manager/internal/domain"
 
 	"github.com/google/uuid"
 	_ "github.com/lib/pq"

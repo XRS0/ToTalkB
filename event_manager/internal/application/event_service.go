@@ -8,8 +8,8 @@ import (
 	"sync"
 	"time"
 
-	"event_manager/internal/domain"
-	"event_manager/internal/infrastructure/notification"
+	"github.com/XRS0/ToTalkB/event_manager/internal/domain"
+	"github.com/XRS0/ToTalkB/event_manager/internal/infrastructure/notification"
 )
 
 type EventApplicationService struct {

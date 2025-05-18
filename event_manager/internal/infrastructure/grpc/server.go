@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"event_manager/internal/application"
-	gen "event_manager/internal/domain/gen"
+	"github.com/XRS0/ToTalkB/event_manager/internal/application"
+	gen "github.com/XRS0/ToTalkB/event_manager/internal/domain/gen"
 
 	"google.golang.org/grpc"
 )

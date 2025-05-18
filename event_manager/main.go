@@ -8,12 +8,11 @@ import (
 	"os/signal"
 	"syscall"
 
-	"event_manager/internal/application"
-	"event_manager/internal/config"
-	grpcserver "event_manager/internal/infrastructure/grpc"
-	"event_manager/internal/infrastructure/notification"
-	"event_manager/internal/infrastructure/persistence/memory"
-
+	"github.com/XRS0/ToTalkB/event_manager/internal/application"
+	"github.com/XRS0/ToTalkB/event_manager/internal/config"
+	grpcserver "github.com/XRS0/ToTalkB/event_manager/internal/infrastructure/grpc"
+	"github.com/XRS0/ToTalkB/event_manager/internal/infrastructure/notification"
+	"github.com/XRS0/ToTalkB/event_manager/internal/infrastructure/persistence/memory"
 	"google.golang.org/grpc"
 )
 

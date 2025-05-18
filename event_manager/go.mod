@@ -1,4 +1,4 @@
-module event_manager
+module github.com/XRS0/ToTalkB/event_manager
 
 go 1.21
 
@@ -35,3 +35,7 @@ require (
 )
 
 replace github.com/XRS0/ToTalkB/auth => ../auth
+
+replace github.com/XRS0/ToTalkB/notify => ../notify
+
+replace github.com/XRS0/ToTalkB/proto => ../proto

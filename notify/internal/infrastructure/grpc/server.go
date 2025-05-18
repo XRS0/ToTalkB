@@ -4,8 +4,10 @@ import (
 	"context"
 	"time"
 
-	"notify/internal/domain"
-	"notify/internal/domain/gen"
+	"github.com/XRS0/ToTalkB/notify/internal/domain/gen"
+	"github.com/google/uuid"
+
+	"github.com/XRS0/ToTalkB/notify/internal/domain"
 
 	"google.golang.org/grpc"
 )
@@ -23,6 +25,7 @@ func NewServer(service domain.NotificationService) *Server {
 
 func (s *Server) SendNotification(ctx context.Context, req *gen.SendNotificationRequest) (*gen.SendNotificationResponse, error) {
 	notification := &domain.Notification{
+		ID:      uuid.NewString(),
 		Type:    req.Type,
 		Payload: req.Payload,
 	}
@@ -38,11 +41,16 @@ func (s *Server) SendNotification(ctx context.Context, req *gen.SendNotification
 }
 
 func (s *Server) GetNotificationStatus(ctx context.Context, req *gen.GetNotificationStatusRequest) (*gen.GetNotificationStatusResponse, error) {
+	notification, err := s.service.FindByID(req.Id)
+	if err != nil {
+		return nil, err
+	}
+
 	return &gen.GetNotificationStatusResponse{
-		Id:        req.Id,
-		Status:    "pending",
-		CreatedAt: time.Now().Format(time.RFC3339),
-		UpdatedAt: time.Now().Format(time.RFC3339),
+		Id:        notification.ID,
+		Status:    string(notification.Status),
+		CreatedAt: notification.CreatedAt.Format(time.RFC3339),
+		UpdatedAt: notification.UpdatedAt.Format(time.RFC3339),
 	}, nil
 }
 
