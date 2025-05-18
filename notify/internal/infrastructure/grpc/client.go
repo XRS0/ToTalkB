@@ -33,7 +33,7 @@ func (c *Client) Close() error {
 	return c.conn.Close()
 }
 
-func (c *Client) SendNotification(ctx context.Context, notificationType string, payload []byte) (string, error) {
+func (c *Client) SendNotification(ctx context.Context, userID int, notificationType string, payload []byte) (string, error) {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 

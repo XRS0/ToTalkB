@@ -1,31 +1,39 @@
 syntax = "proto3";
 
-package gen;
+package gen_n;
 
-option go_package = "./gen";
+option go_package = "github.com/XRS0/ToTalkB/gen_n";
 
+// Сервис для работы с уведомлениями
 service NotificationService {
-  rpc SendNotification (SendNotificationRequest) returns (SendNotificationResponse);
-  rpc GetNotificationStatus (GetNotificationStatusRequest) returns (GetNotificationStatusResponse);
+  // Отправка уведомления
+  rpc SendNotification(SendNotificationRequest) returns (SendNotificationResponse) {}
+  // Получение статуса уведомления
+  rpc GetNotificationStatus(GetNotificationStatusRequest) returns (GetNotificationStatusResponse) {}
 }
 
+// Запрос на отправку уведомления
 message SendNotificationRequest {
-  string type = 1;
-  bytes payload = 2;
+  int32 user_id = 1;  // ID пользователя-получателя
+  string type = 2;    // Тип уведомления
+  bytes payload = 3;  // Данные уведомления
 }
 
+// Ответ на отправку уведомления
 message SendNotificationResponse {
-  string id = 1;
-  string status = 2;
+  string id = 1;      // ID уведомления
+  string status = 2;  // Статус уведомления
 }
 
+// Запрос на получение статуса уведомления
 message GetNotificationStatusRequest {
-  string id = 1;
+  string id = 1;  // ID уведомления
 }
 
+// Ответ с информацией о статусе уведомления
 message GetNotificationStatusResponse {
-  string id = 1;
-  string status = 2;
-  string created_at = 3;
-  string updated_at = 4;
-}
+  string id = 1;         // ID уведомления
+  string status = 2;     // Статус уведомления
+  string created_at = 3; // Время создания
+  string updated_at = 4; // Время последнего обновления
+} 

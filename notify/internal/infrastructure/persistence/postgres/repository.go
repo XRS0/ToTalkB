@@ -132,3 +132,62 @@ func (r *Repository) Update(notification *domain.Notification) error {
 
 	return err
 }
+
+func (r *Repository) GetScheduledNotifications(now time.Time) ([]*domain.Notification, error) {
+	query := `
+		SELECT id, type, payload, status, created_at, updated_at, scheduled_at
+		FROM notifications
+		WHERE scheduled_at <= $1 AND status = $2
+	`
+
+	rows, err := r.db.Query(query, now, domain.StatusPending)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var notifications []*domain.Notification
+	for rows.Next() {
+		var notification domain.Notification
+		err := rows.Scan(
+			&notification.ID,
+			&notification.Type,
+			&notification.Payload,
+			&notification.Status,
+			&notification.CreatedAt,
+			&notification.UpdatedAt,
+			&notification.ScheduledAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+		notifications = append(notifications, &notification)
+	}
+
+	return notifications, nil
+}
+
+func (r *Repository) CancelScheduledNotification(id string) error {
+	query := `
+		UPDATE notifications
+		SET status = $1, updated_at = $2
+		WHERE id = $3 AND status = $4 AND scheduled_at > $2
+	`
+
+	now := time.Now()
+	result, err := r.db.Exec(query, domain.StatusCancelled, now, id, domain.StatusPending)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("notification not found or cannot be cancelled")
+	}
+
+	return nil
+}

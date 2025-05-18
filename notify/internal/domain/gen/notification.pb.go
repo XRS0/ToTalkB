@@ -21,10 +21,12 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// Запрос на отправку уведомления
 type SendNotificationRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Type          string                 `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"`
-	Payload       []byte                 `protobuf:"bytes,2,opt,name=payload,proto3" json:"payload,omitempty"`
+	UserId        int32                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"` // ID пользователя-получателя
+	Type          string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"`                    // Тип уведомления
+	Payload       []byte                 `protobuf:"bytes,3,opt,name=payload,proto3" json:"payload,omitempty"`              // Данные уведомления
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -59,6 +61,13 @@ func (*SendNotificationRequest) Descriptor() ([]byte, []int) {
 	return file_proto_notification_proto_rawDescGZIP(), []int{0}
 }
 
+func (x *SendNotificationRequest) GetUserId() int32 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
 func (x *SendNotificationRequest) GetType() string {
 	if x != nil {
 		return x.Type
@@ -73,10 +82,11 @@ func (x *SendNotificationRequest) GetPayload() []byte {
 	return nil
 }
 
+// Ответ на отправку уведомления
 type SendNotificationResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Status        string                 `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`         // ID уведомления
+	Status        string                 `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"` // Статус уведомления
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -125,9 +135,10 @@ func (x *SendNotificationResponse) GetStatus() string {
 	return ""
 }
 
+// Запрос на получение статуса уведомления
 type GetNotificationStatusRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"` // ID уведомления
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -169,12 +180,13 @@ func (x *GetNotificationStatusRequest) GetId() string {
 	return ""
 }
 
+// Ответ с информацией о статусе уведомления
 type GetNotificationStatusResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Status        string                 `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
-	CreatedAt     string                 `protobuf:"bytes,3,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt     string                 `protobuf:"bytes,4,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                // ID уведомления
+	Status        string                 `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`                        // Статус уведомления
+	CreatedAt     string                 `protobuf:"bytes,3,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"` // Время создания
+	UpdatedAt     string                 `protobuf:"bytes,4,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"` // Время последнего обновления
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -241,10 +253,11 @@ var File_proto_notification_proto protoreflect.FileDescriptor
 
 const file_proto_notification_proto_rawDesc = "" +
 	"\n" +
-	"\x18proto/notification.proto\x12\x03gen\"G\n" +
-	"\x17SendNotificationRequest\x12\x12\n" +
-	"\x04type\x18\x01 \x01(\tR\x04type\x12\x18\n" +
-	"\apayload\x18\x02 \x01(\fR\apayload\"B\n" +
+	"\x18proto/notification.proto\x12\x03gen\"`\n" +
+	"\x17SendNotificationRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\x05R\x06userId\x12\x12\n" +
+	"\x04type\x18\x02 \x01(\tR\x04type\x12\x18\n" +
+	"\apayload\x18\x03 \x01(\fR\apayload\"B\n" +
 	"\x18SendNotificationResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x16\n" +
 	"\x06status\x18\x02 \x01(\tR\x06status\".\n" +
@@ -256,10 +269,10 @@ const file_proto_notification_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\x03 \x01(\tR\tcreatedAt\x12\x1d\n" +
 	"\n" +
-	"updated_at\x18\x04 \x01(\tR\tupdatedAt2\xc6\x01\n" +
-	"\x13NotificationService\x12O\n" +
-	"\x10SendNotification\x12\x1c.gen.SendNotificationRequest\x1a\x1d.gen.SendNotificationResponse\x12^\n" +
-	"\x15GetNotificationStatus\x12!.gen.GetNotificationStatusRequest\x1a\".gen.GetNotificationStatusResponseB\aZ\x05./genb\x06proto3"
+	"updated_at\x18\x04 \x01(\tR\tupdatedAt2\xca\x01\n" +
+	"\x13NotificationService\x12Q\n" +
+	"\x10SendNotification\x12\x1c.gen.SendNotificationRequest\x1a\x1d.gen.SendNotificationResponse\"\x00\x12`\n" +
+	"\x15GetNotificationStatus\x12!.gen.GetNotificationStatusRequest\x1a\".gen.GetNotificationStatusResponse\"\x00B\aZ\x05./genb\x06proto3"
 
 var (
 	file_proto_notification_proto_rawDescOnce sync.Once
