@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package gen_notify;
+package gen_n;
 
-option go_package = "./gen_notify";
+option go_package = "github.com/XRS0/ToTalkB/gen_n";
 
 // Сервис для работы с уведомлениями
 service NotificationService {
