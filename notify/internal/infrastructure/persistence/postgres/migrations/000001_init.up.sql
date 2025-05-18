@@ -4,5 +4,6 @@ CREATE TABLE IF NOT EXISTS notifications (
     payload BYTEA NOT NULL,
     status VARCHAR(50) NOT NULL,
     created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL
+    updated_at TIMESTAMP NOT NULL,
+    scheduled_at TIMESTAMP
 ); 

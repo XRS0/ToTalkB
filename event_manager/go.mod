@@ -35,3 +35,5 @@ require (
 )
 
 replace github.com/XRS0/ToTalkB/auth => ../auth
+
+replace github.com/XRS0/ToTalkB/notify => ../notify
