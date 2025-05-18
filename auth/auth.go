@@ -2,6 +2,7 @@ package auth
 
 import (
 	"crypto/sha256"
+	"database/sql"
 	"errors"
 	"fmt"
 	"net/http"
@@ -132,4 +133,24 @@ func ParseAccessToken(accessToken string) (string, error) {
 	}
 
 	return claims.UserId, nil
+}
+
+func (a *Auth) GetUser(c *gin.Context) {
+	userId := c.GetString("userId")
+
+	var name, role string
+	err := a.DB.QueryRow("SELECT name, role FROM users WHERE id = $1", userId).Scan(&name, &role)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "user not found"})
+			return
+		}
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "internal server error"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"name": name,
+		"role": role,
+	})
 }

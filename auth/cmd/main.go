@@ -24,6 +24,7 @@ func main() {
 
 	r.POST("/api/auth/sign-up", auth.SignUp)
 	r.POST("/api/auth/sign-in", auth.SignIn)
+	r.GET("/api/get-user", middleware.UserIdentity, auth.GetUser)
 
 	fmt.Println("Auth Server started at :8080")
 	if err := r.Run(":8080"); err != nil {
