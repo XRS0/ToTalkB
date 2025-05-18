@@ -25,7 +25,14 @@ func CORSMiddleware() gin.HandlerFunc {
 }
 
 func UserIdentity(c *gin.Context) {
-	userId, err := auth.ParseAccessToken(strings.Split(c.GetHeader("Authorization"), " ")[1])
+	authorization := c.GetHeader("Authorization")
+	parts := strings.Split(authorization, " ")
+	if len(parts) < 2 {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"err": "authorization header format must be Bearer {token}"})
+		return
+	}
+
+	userId, err := auth.ParseAccessToken(parts[1])
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"err": err.Error()})
 		return
