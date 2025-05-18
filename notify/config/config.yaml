@@ -6,6 +6,6 @@ server:
 database:
   host: localhost
   port: 5432
-  user: postgres
-  password: postgres
-  dbname: notifications 
+  user: totalkadmin
+  password: mishashopa
+  dbname: totalk_db

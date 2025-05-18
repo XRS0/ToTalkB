@@ -1,29 +1,55 @@
 syntax = "proto3";
 
-package gen;
+package event;
 
 option go_package = "./gen";
 
+// Сервис для работы с событиями
 service EventService {
   rpc ProcessEvent (ProcessEventRequest) returns (ProcessEventResponse);
   rpc GetEventStatus (GetEventStatusRequest) returns (GetEventStatusResponse);
 }
 
+// Сервис для работы с очередью событий
+service EventQueueService {
+  // Добавление пользователя в очередь события
+  rpc JoinQueue(JoinQueueRequest) returns (JoinQueueResponse);
+  
+  // Удаление пользователя из очереди события
+  rpc LeaveQueue(LeaveQueueRequest) returns (LeaveQueueResponse);
+  
+  // Получение статуса очереди для события
+  rpc GetQueueStatus(GetQueueStatusRequest) returns (GetQueueStatusResponse);
+  
+  // Получение позиции пользователя в очереди
+  rpc GetUserPosition(GetUserPositionRequest) returns (GetUserPositionResponse);
+  
+  // Обработка следующей записи в очереди
+  rpc ProcessNext(ProcessNextRequest) returns (ProcessNextResponse);
+  
+  // Закрытие набора в очередь для события
+  rpc CloseQueue(CloseQueueRequest) returns (CloseQueueResponse);
+}
+
+// Запрос на обработку события
 message ProcessEventRequest {
   string type = 1;
   string source = 2;
   bytes payload = 3;
 }
 
+// Ответ на обработку события
 message ProcessEventResponse {
   string id = 1;
   string status = 2;
 }
 
+// Запрос на получение статуса события
 message GetEventStatusRequest {
   string id = 1;
 }
 
+// Ответ с статусом события
 message GetEventStatusResponse {
   string id = 1;
   string type = 2;
@@ -31,4 +57,88 @@ message GetEventStatusResponse {
   string status = 4;
   string created_at = 5;
   string updated_at = 6;
+}
+
+// Запись в очереди событий
+message EventQueue {
+  string id = 1;
+  string event_id = 2;
+  string user_id = 3;
+  string status = 4;
+  int32 position = 5;
+  string created_at = 6;
+  string updated_at = 7;
+}
+
+// Статусы очереди
+enum QueueStatus {
+  QUEUE_STATUS_UNSPECIFIED = 0;
+  QUEUE_STATUS_WAITING = 1;
+  QUEUE_STATUS_ACTIVE = 2;
+  QUEUE_STATUS_COMPLETED = 3;
+  QUEUE_STATUS_CANCELLED = 4;
+}
+
+// Запрос на добавление в очередь
+message JoinQueueRequest {
+  string event_id = 1;
+  string user_id = 2;
+}
+
+// Ответ на добавление в очередь
+message JoinQueueResponse {
+  string queue_id = 1;
+  int32 position = 2;
+}
+
+// Запрос на выход из очереди
+message LeaveQueueRequest {
+  string event_id = 1;
+  string user_id = 2;
+}
+
+// Ответ на выход из очереди
+message LeaveQueueResponse {
+  bool success = 1;
+}
+
+// Запрос на получение статуса очереди
+message GetQueueStatusRequest {
+  string event_id = 1;
+}
+
+// Ответ с статусом очереди
+message GetQueueStatusResponse {
+  repeated EventQueue queues = 1;
+}
+
+// Запрос на получение позиции пользователя
+message GetUserPositionRequest {
+  string event_id = 1;
+  string user_id = 2;
+}
+
+// Ответ с позицией пользователя
+message GetUserPositionResponse {
+  int32 position = 1;
+}
+
+// Запрос на обработку следующего в очереди
+message ProcessNextRequest {
+  string event_id = 1;
+}
+
+// Ответ на обработку следующего в очереди
+message ProcessNextResponse {
+  EventQueue queue = 1;
+}
+
+// Запрос на закрытие очереди
+message CloseQueueRequest {
+  string event_id = 1;
+}
+
+// Ответ на закрытие очереди
+message CloseQueueResponse {
+  bool success = 1;
 } 

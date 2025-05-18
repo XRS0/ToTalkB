@@ -1,0 +1,15 @@
+server_event-manager:
+  port: 8081
+  grpc_port: 9091
+  host: localhost
+
+database:
+  host: localhost
+  port: 5432
+  user: postgres
+  password: postgres
+  dbname: events
+
+notification_service:
+  host: localhost
+  grpc_port: 9090 

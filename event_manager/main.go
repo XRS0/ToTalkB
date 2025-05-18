@@ -11,7 +11,8 @@ import (
 	"event_manager/internal/application"
 	"event_manager/internal/config"
 	grpcserver "event_manager/internal/infrastructure/grpc"
-	"event_manager/internal/infrastructure/persistence/postgres"
+	"event_manager/internal/infrastructure/notification"
+	"event_manager/internal/infrastructure/persistence/memory"
 
 	"google.golang.org/grpc"
 )
@@ -22,17 +23,17 @@ func main() {
 		log.Fatalf("Failed to load config: %v", err)
 	}
 
-	connStr := fmt.Sprintf(
-		"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		cfg.Database.Host, cfg.Database.Port, cfg.Database.User, cfg.Database.Password, cfg.Database.DBName,
-	)
-	repository, err := postgres.NewRepository(connStr)
+	// Initialize notification client
+	notificationClient, err := notification.NewClient(&cfg.NotificationService)
 	if err != nil {
-		log.Fatalf("Failed to create repository: %v", err)
+		log.Fatalf("Failed to create notification client: %v", err)
 	}
-	defer repository.Close()
+	defer notificationClient.Close()
 
-	eventService := application.NewEventApplicationService(repository)
+	repository := memory.NewInMemoryEventRepository()
+
+	// Pass notification client to the application service
+	eventService := application.NewEventApplicationService(repository, notificationClient)
 
 	grpcServer := grpc.NewServer()
 	grpcserver.RegisterServer(grpcServer, eventService)

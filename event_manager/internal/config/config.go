@@ -5,8 +5,9 @@ import (
 )
 
 type Config struct {
-	Server   ServerConfig   `mapstructure:"server_event-manager"`
-	Database DatabaseConfig `mapstructure:"database"`
+	Server              ServerConfig              `mapstructure:"server_event-manager"`
+	Database            DatabaseConfig            `mapstructure:"database"`
+	NotificationService NotificationServiceConfig `mapstructure:"notification_service"`
 }
 
 type ServerConfig struct {
@@ -23,10 +24,15 @@ type DatabaseConfig struct {
 	DBName   string `mapstructure:"dbname"`
 }
 
+type NotificationServiceConfig struct {
+	Host     string `mapstructure:"host"`
+	GRPCPort int    `mapstructure:"grpc_port"`
+}
+
 func Load() (*Config, error) {
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
-	viper.AddConfigPath(".")
+	viper.AddConfigPath("../config")
 	viper.AddConfigPath("./config")
 	viper.AutomaticEnv()
 
@@ -38,6 +44,8 @@ func Load() (*Config, error) {
 	if err := viper.Unmarshal(&config); err != nil {
 		return nil, err
 	}
+
+	// fmt.Printf("%+v", config)
 
 	return &config, nil
 }
