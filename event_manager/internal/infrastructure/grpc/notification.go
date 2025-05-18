@@ -3,7 +3,7 @@ package grpc
 import (
 	"context"
 
-	"github.com/XRS0/ToTalkB/notify/internal/domain/gen"
+	"github.com/XRS0/ToTalkB/proto/gen"
 	"google.golang.org/grpc"
 )
 
