@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package gen;
+package gen_notify;
 
-option go_package = "./gen";
+option go_package = "./gen_notify";
 
 // Сервис для работы с уведомлениями
 service NotificationService {
