@@ -19,8 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	EventService_ProcessEvent_FullMethodName   = "/event.EventService/ProcessEvent"
-	EventService_GetEventStatus_FullMethodName = "/event.EventService/GetEventStatus"
+	EventService_ProcessEvent_FullMethodName   = "/gen.EventService/ProcessEvent"
+	EventService_GetEventStatus_FullMethodName = "/gen.EventService/GetEventStatus"
 )
 
 // EventServiceClient is the client API for EventService service.
@@ -146,7 +146,7 @@ func _EventService_GetEventStatus_Handler(srv interface{}, ctx context.Context, 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var EventService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "event.EventService",
+	ServiceName: "gen.EventService",
 	HandlerType: (*EventServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -163,12 +163,12 @@ var EventService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	EventQueueService_JoinQueue_FullMethodName       = "/event.EventQueueService/JoinQueue"
-	EventQueueService_LeaveQueue_FullMethodName      = "/event.EventQueueService/LeaveQueue"
-	EventQueueService_GetQueueStatus_FullMethodName  = "/event.EventQueueService/GetQueueStatus"
-	EventQueueService_GetUserPosition_FullMethodName = "/event.EventQueueService/GetUserPosition"
-	EventQueueService_ProcessNext_FullMethodName     = "/event.EventQueueService/ProcessNext"
-	EventQueueService_CloseQueue_FullMethodName      = "/event.EventQueueService/CloseQueue"
+	EventQueueService_JoinQueue_FullMethodName       = "/gen.EventQueueService/JoinQueue"
+	EventQueueService_LeaveQueue_FullMethodName      = "/gen.EventQueueService/LeaveQueue"
+	EventQueueService_GetQueueStatus_FullMethodName  = "/gen.EventQueueService/GetQueueStatus"
+	EventQueueService_GetUserPosition_FullMethodName = "/gen.EventQueueService/GetUserPosition"
+	EventQueueService_ProcessNext_FullMethodName     = "/gen.EventQueueService/ProcessNext"
+	EventQueueService_CloseQueue_FullMethodName      = "/gen.EventQueueService/CloseQueue"
 )
 
 // EventQueueServiceClient is the client API for EventQueueService service.
@@ -438,7 +438,7 @@ func _EventQueueService_CloseQueue_Handler(srv interface{}, ctx context.Context,
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var EventQueueService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "event.EventQueueService",
+	ServiceName: "gen.EventQueueService",
 	HandlerType: (*EventQueueServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

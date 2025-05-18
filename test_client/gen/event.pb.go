@@ -990,7 +990,7 @@ var File_proto_event_proto protoreflect.FileDescriptor
 
 const file_proto_event_proto_rawDesc = "" +
 	"\n" +
-	"\x11proto/event.proto\x12\x05event\"[\n" +
+	"\x11proto/event.proto\x12\x03gen\"[\n" +
 	"\x13ProcessEventRequest\x12\x12\n" +
 	"\x04type\x18\x01 \x01(\tR\x04type\x12\x16\n" +
 	"\x06source\x18\x02 \x01(\tR\x06source\x12\x18\n" +
@@ -1032,18 +1032,18 @@ const file_proto_event_proto_rawDesc = "" +
 	"\x12LeaveQueueResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\"2\n" +
 	"\x15GetQueueStatusRequest\x12\x19\n" +
-	"\bevent_id\x18\x01 \x01(\tR\aeventId\"C\n" +
-	"\x16GetQueueStatusResponse\x12)\n" +
-	"\x06queues\x18\x01 \x03(\v2\x11.event.EventQueueR\x06queues\"L\n" +
+	"\bevent_id\x18\x01 \x01(\tR\aeventId\"A\n" +
+	"\x16GetQueueStatusResponse\x12'\n" +
+	"\x06queues\x18\x01 \x03(\v2\x0f.gen.EventQueueR\x06queues\"L\n" +
 	"\x16GetUserPositionRequest\x12\x19\n" +
 	"\bevent_id\x18\x01 \x01(\tR\aeventId\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\tR\x06userId\"5\n" +
 	"\x17GetUserPositionResponse\x12\x1a\n" +
 	"\bposition\x18\x01 \x01(\x05R\bposition\"/\n" +
 	"\x12ProcessNextRequest\x12\x19\n" +
-	"\bevent_id\x18\x01 \x01(\tR\aeventId\">\n" +
-	"\x13ProcessNextResponse\x12'\n" +
-	"\x05queue\x18\x01 \x01(\v2\x11.event.EventQueueR\x05queue\".\n" +
+	"\bevent_id\x18\x01 \x01(\tR\aeventId\"<\n" +
+	"\x13ProcessNextResponse\x12%\n" +
+	"\x05queue\x18\x01 \x01(\v2\x0f.gen.EventQueueR\x05queue\".\n" +
 	"\x11CloseQueueRequest\x12\x19\n" +
 	"\bevent_id\x18\x01 \x01(\tR\aeventId\".\n" +
 	"\x12CloseQueueResponse\x12\x18\n" +
@@ -1053,19 +1053,19 @@ const file_proto_event_proto_rawDesc = "" +
 	"\x14QUEUE_STATUS_WAITING\x10\x01\x12\x17\n" +
 	"\x13QUEUE_STATUS_ACTIVE\x10\x02\x12\x1a\n" +
 	"\x16QUEUE_STATUS_COMPLETED\x10\x03\x12\x1a\n" +
-	"\x16QUEUE_STATUS_CANCELLED\x10\x042\xa6\x01\n" +
-	"\fEventService\x12G\n" +
-	"\fProcessEvent\x12\x1a.event.ProcessEventRequest\x1a\x1b.event.ProcessEventResponse\x12M\n" +
-	"\x0eGetEventStatus\x12\x1c.event.GetEventStatusRequest\x1a\x1d.event.GetEventStatusResponse2\xc0\x03\n" +
-	"\x11EventQueueService\x12>\n" +
-	"\tJoinQueue\x12\x17.event.JoinQueueRequest\x1a\x18.event.JoinQueueResponse\x12A\n" +
+	"\x16QUEUE_STATUS_CANCELLED\x10\x042\x9e\x01\n" +
+	"\fEventService\x12C\n" +
+	"\fProcessEvent\x12\x18.gen.ProcessEventRequest\x1a\x19.gen.ProcessEventResponse\x12I\n" +
+	"\x0eGetEventStatus\x12\x1a.gen.GetEventStatusRequest\x1a\x1b.gen.GetEventStatusResponse2\xa8\x03\n" +
+	"\x11EventQueueService\x12:\n" +
+	"\tJoinQueue\x12\x15.gen.JoinQueueRequest\x1a\x16.gen.JoinQueueResponse\x12=\n" +
 	"\n" +
-	"LeaveQueue\x12\x18.event.LeaveQueueRequest\x1a\x19.event.LeaveQueueResponse\x12M\n" +
-	"\x0eGetQueueStatus\x12\x1c.event.GetQueueStatusRequest\x1a\x1d.event.GetQueueStatusResponse\x12P\n" +
-	"\x0fGetUserPosition\x12\x1d.event.GetUserPositionRequest\x1a\x1e.event.GetUserPositionResponse\x12D\n" +
-	"\vProcessNext\x12\x19.event.ProcessNextRequest\x1a\x1a.event.ProcessNextResponse\x12A\n" +
+	"LeaveQueue\x12\x16.gen.LeaveQueueRequest\x1a\x17.gen.LeaveQueueResponse\x12I\n" +
+	"\x0eGetQueueStatus\x12\x1a.gen.GetQueueStatusRequest\x1a\x1b.gen.GetQueueStatusResponse\x12L\n" +
+	"\x0fGetUserPosition\x12\x1b.gen.GetUserPositionRequest\x1a\x1c.gen.GetUserPositionResponse\x12@\n" +
+	"\vProcessNext\x12\x17.gen.ProcessNextRequest\x1a\x18.gen.ProcessNextResponse\x12=\n" +
 	"\n" +
-	"CloseQueue\x12\x18.event.CloseQueueRequest\x1a\x19.event.CloseQueueResponseB\aZ\x05./genb\x06proto3"
+	"CloseQueue\x12\x16.gen.CloseQueueRequest\x1a\x17.gen.CloseQueueResponseB\aZ\x05./genb\x06proto3"
 
 var (
 	file_proto_event_proto_rawDescOnce sync.Once
@@ -1082,44 +1082,44 @@ func file_proto_event_proto_rawDescGZIP() []byte {
 var file_proto_event_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_proto_event_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_proto_event_proto_goTypes = []any{
-	(QueueStatus)(0),                // 0: event.QueueStatus
-	(*ProcessEventRequest)(nil),     // 1: event.ProcessEventRequest
-	(*ProcessEventResponse)(nil),    // 2: event.ProcessEventResponse
-	(*GetEventStatusRequest)(nil),   // 3: event.GetEventStatusRequest
-	(*GetEventStatusResponse)(nil),  // 4: event.GetEventStatusResponse
-	(*EventQueue)(nil),              // 5: event.EventQueue
-	(*JoinQueueRequest)(nil),        // 6: event.JoinQueueRequest
-	(*JoinQueueResponse)(nil),       // 7: event.JoinQueueResponse
-	(*LeaveQueueRequest)(nil),       // 8: event.LeaveQueueRequest
-	(*LeaveQueueResponse)(nil),      // 9: event.LeaveQueueResponse
-	(*GetQueueStatusRequest)(nil),   // 10: event.GetQueueStatusRequest
-	(*GetQueueStatusResponse)(nil),  // 11: event.GetQueueStatusResponse
-	(*GetUserPositionRequest)(nil),  // 12: event.GetUserPositionRequest
-	(*GetUserPositionResponse)(nil), // 13: event.GetUserPositionResponse
-	(*ProcessNextRequest)(nil),      // 14: event.ProcessNextRequest
-	(*ProcessNextResponse)(nil),     // 15: event.ProcessNextResponse
-	(*CloseQueueRequest)(nil),       // 16: event.CloseQueueRequest
-	(*CloseQueueResponse)(nil),      // 17: event.CloseQueueResponse
+	(QueueStatus)(0),                // 0: gen.QueueStatus
+	(*ProcessEventRequest)(nil),     // 1: gen.ProcessEventRequest
+	(*ProcessEventResponse)(nil),    // 2: gen.ProcessEventResponse
+	(*GetEventStatusRequest)(nil),   // 3: gen.GetEventStatusRequest
+	(*GetEventStatusResponse)(nil),  // 4: gen.GetEventStatusResponse
+	(*EventQueue)(nil),              // 5: gen.EventQueue
+	(*JoinQueueRequest)(nil),        // 6: gen.JoinQueueRequest
+	(*JoinQueueResponse)(nil),       // 7: gen.JoinQueueResponse
+	(*LeaveQueueRequest)(nil),       // 8: gen.LeaveQueueRequest
+	(*LeaveQueueResponse)(nil),      // 9: gen.LeaveQueueResponse
+	(*GetQueueStatusRequest)(nil),   // 10: gen.GetQueueStatusRequest
+	(*GetQueueStatusResponse)(nil),  // 11: gen.GetQueueStatusResponse
+	(*GetUserPositionRequest)(nil),  // 12: gen.GetUserPositionRequest
+	(*GetUserPositionResponse)(nil), // 13: gen.GetUserPositionResponse
+	(*ProcessNextRequest)(nil),      // 14: gen.ProcessNextRequest
+	(*ProcessNextResponse)(nil),     // 15: gen.ProcessNextResponse
+	(*CloseQueueRequest)(nil),       // 16: gen.CloseQueueRequest
+	(*CloseQueueResponse)(nil),      // 17: gen.CloseQueueResponse
 }
 var file_proto_event_proto_depIdxs = []int32{
-	5,  // 0: event.GetQueueStatusResponse.queues:type_name -> event.EventQueue
-	5,  // 1: event.ProcessNextResponse.queue:type_name -> event.EventQueue
-	1,  // 2: event.EventService.ProcessEvent:input_type -> event.ProcessEventRequest
-	3,  // 3: event.EventService.GetEventStatus:input_type -> event.GetEventStatusRequest
-	6,  // 4: event.EventQueueService.JoinQueue:input_type -> event.JoinQueueRequest
-	8,  // 5: event.EventQueueService.LeaveQueue:input_type -> event.LeaveQueueRequest
-	10, // 6: event.EventQueueService.GetQueueStatus:input_type -> event.GetQueueStatusRequest
-	12, // 7: event.EventQueueService.GetUserPosition:input_type -> event.GetUserPositionRequest
-	14, // 8: event.EventQueueService.ProcessNext:input_type -> event.ProcessNextRequest
-	16, // 9: event.EventQueueService.CloseQueue:input_type -> event.CloseQueueRequest
-	2,  // 10: event.EventService.ProcessEvent:output_type -> event.ProcessEventResponse
-	4,  // 11: event.EventService.GetEventStatus:output_type -> event.GetEventStatusResponse
-	7,  // 12: event.EventQueueService.JoinQueue:output_type -> event.JoinQueueResponse
-	9,  // 13: event.EventQueueService.LeaveQueue:output_type -> event.LeaveQueueResponse
-	11, // 14: event.EventQueueService.GetQueueStatus:output_type -> event.GetQueueStatusResponse
-	13, // 15: event.EventQueueService.GetUserPosition:output_type -> event.GetUserPositionResponse
-	15, // 16: event.EventQueueService.ProcessNext:output_type -> event.ProcessNextResponse
-	17, // 17: event.EventQueueService.CloseQueue:output_type -> event.CloseQueueResponse
+	5,  // 0: gen.GetQueueStatusResponse.queues:type_name -> gen.EventQueue
+	5,  // 1: gen.ProcessNextResponse.queue:type_name -> gen.EventQueue
+	1,  // 2: gen.EventService.ProcessEvent:input_type -> gen.ProcessEventRequest
+	3,  // 3: gen.EventService.GetEventStatus:input_type -> gen.GetEventStatusRequest
+	6,  // 4: gen.EventQueueService.JoinQueue:input_type -> gen.JoinQueueRequest
+	8,  // 5: gen.EventQueueService.LeaveQueue:input_type -> gen.LeaveQueueRequest
+	10, // 6: gen.EventQueueService.GetQueueStatus:input_type -> gen.GetQueueStatusRequest
+	12, // 7: gen.EventQueueService.GetUserPosition:input_type -> gen.GetUserPositionRequest
+	14, // 8: gen.EventQueueService.ProcessNext:input_type -> gen.ProcessNextRequest
+	16, // 9: gen.EventQueueService.CloseQueue:input_type -> gen.CloseQueueRequest
+	2,  // 10: gen.EventService.ProcessEvent:output_type -> gen.ProcessEventResponse
+	4,  // 11: gen.EventService.GetEventStatus:output_type -> gen.GetEventStatusResponse
+	7,  // 12: gen.EventQueueService.JoinQueue:output_type -> gen.JoinQueueResponse
+	9,  // 13: gen.EventQueueService.LeaveQueue:output_type -> gen.LeaveQueueResponse
+	11, // 14: gen.EventQueueService.GetQueueStatus:output_type -> gen.GetQueueStatusResponse
+	13, // 15: gen.EventQueueService.GetUserPosition:output_type -> gen.GetUserPositionResponse
+	15, // 16: gen.EventQueueService.ProcessNext:output_type -> gen.ProcessNextResponse
+	17, // 17: gen.EventQueueService.CloseQueue:output_type -> gen.CloseQueueResponse
 	10, // [10:18] is the sub-list for method output_type
 	2,  // [2:10] is the sub-list for method input_type
 	2,  // [2:2] is the sub-list for extension type_name

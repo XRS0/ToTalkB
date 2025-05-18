@@ -1,0 +1,15 @@
+server:
+  port: 8080
+  grpc_port: 50051
+
+database:
+  host: localhost
+  port: 5432
+  user: totalkadmin
+  password: mishashopa
+  dbname: totalk_db
+  sslmode: disable
+
+notification_service:
+  host: localhost
+  grpc_port: 50052 
