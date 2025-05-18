@@ -82,12 +82,13 @@ func (c *Client) readPump() {
 		log.Println(incomingMsg)
 
 		content := strings.TrimSpace(incomingMsg.Message)
+		now := time.Now()
 
 		_, err = c.db.Exec(
 			"INSERT INTO messages (chat_id, sender_id, created_at, content) VALUES ($1, $2, $3, $4)",
 			c.chatId,
 			c.userId,
-			time.Now(),
+			now,
 			content,
 		)
 		if err != nil {
@@ -98,7 +99,7 @@ func (c *Client) readPump() {
 		outMsg := OutgoingMessage{
 			Content: content,
 			Sender:  incomingMsg.Sender,
-			Time:    time.Now().Format("15:04"),
+			Time:    now.Format("15:04"),
 		}
 
 		jsonMsg, err := json.Marshal(outMsg)
@@ -174,10 +175,11 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request, db *sqlx.DB, user
 func loadChatHistory(db *sqlx.DB, chatId string) ([]pkg.Message, error) {
 	var messages []pkg.Message
 	query := `
-        SELECT content, created_at
-        FROM messages
-        WHERE chat_id = $1
-        ORDER BY created_at ASC
+        SELECT m.content, u.name AS sender, m.created_at
+        FROM messages m
+        JOIN users u ON m.sender_id = u.id
+        WHERE m.chat_id = $1
+        ORDER BY m.created_at ASC
     `
 	err := db.Select(&messages, query, chatId)
 	if err != nil {
