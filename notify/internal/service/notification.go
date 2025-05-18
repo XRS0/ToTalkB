@@ -57,6 +57,5 @@ func (s *NotificationService) MarkAsFailed(notification *domain.Notification, re
 }
 
 func (s *NotificationService) Start(ctx context.Context) error {
-	// Service is started by the Kafka consumer
 	return nil
 }
