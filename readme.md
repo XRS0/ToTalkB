@@ -1,3 +1,4 @@
+```
 ToTalkB
 ├─ auth
 │  ├─ auth.go
@@ -136,3 +137,4 @@ ToTalkB
    ├─ go.mod
    ├─ go.sum
    └─ main.go
+```
