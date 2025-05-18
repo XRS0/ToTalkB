@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"notify/internal/config"
-	"notify/internal/domain"
+	"github.com/XRS0/ToTalkB/notify/internal/config"
+
+	"github.com/XRS0/ToTalkB/notify/internal/domain"
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"

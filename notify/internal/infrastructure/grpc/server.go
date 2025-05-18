@@ -4,8 +4,9 @@ import (
 	"context"
 	"time"
 
-	"notify/internal/domain"
-	"notify/internal/domain/gen"
+	"github.com/XRS0/ToTalkB/notify/internal/domain/gen"
+
+	"github.com/XRS0/ToTalkB/notify/internal/domain"
 
 	"google.golang.org/grpc"
 )

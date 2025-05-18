@@ -7,8 +7,9 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"event_manager/internal/config"
-	gen "event_manager/internal/domain/proto"
+	gen "github.com/XRS0/ToTalkB/event_manager/internal/domain/proto"
+
+	"github.com/XRS0/ToTalkB/event_manager/internal/config"
 )
 
 type Client struct {

@@ -7,10 +7,11 @@ import (
 	"os/signal"
 	"syscall"
 
-	"notify/internal/config"
-	"notify/internal/infrastructure/persistence/postgres"
-	"notify/internal/server"
-	"notify/internal/service"
+	"github.com/XRS0/ToTalkB/notify/internal/infrastructure/persistence/postgres"
+	"github.com/XRS0/ToTalkB/notify/internal/server"
+	"github.com/XRS0/ToTalkB/notify/internal/service"
+
+	"github.com/XRS0/ToTalkB/notify/internal/config"
 )
 
 func main() {
